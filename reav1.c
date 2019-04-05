@@ -41,7 +41,7 @@ queue* create_queue()
 void print(queue *fila)
 {
     node *aux = fila->head;
-    if(aux != NULL)
+    while(aux != NULL)
     {
         printf("%d %c\n",aux->priority, aux->item);
         aux = aux->next;
@@ -55,7 +55,7 @@ void enqueue(queue *pq, byte item, long int freq)
     new_node->priority = freq;//2//1
     
     if (pq->head == NULL || freq < pq->head->priority) {
-        printf("oi\n");
+        //printf("oi\n");
         new_node->next = pq->head;
         pq->head = new_node;
     } else {
@@ -72,24 +72,13 @@ void huff(btree *bt, long int *freq)
 {
     int i,flag = 0;
     queue *fila = create_queue();
-    if(fila==NULL) printf("arroz com feijao\n\n");
     
     
     for(i=0;i<256;i++)
     {
         if(freq[i] != 0)
         {
-            /*if(!flag)
-            {
-                fila = (queue*) malloc(sizeof(queue));
-                //fila->head->priority = freq[i];
-                //fila->head->item = i;
-                //fila->head->next = NULL;
-                flag = 1;
-            } else */
-           // printf("%c %d\n",i,freq[i]);
             enqueue(fila,i,freq[i]);
-            //print(fila);
         }
         
     }

@@ -2,17 +2,9 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-typedef struct btree btree;
 typedef struct queue queue;
 typedef unsigned char byte;
 typedef struct node node;
-
-struct btree
-{
-    node *c;
-    btree *left;
-    btree *right;
-};
 
 struct queue
 {
@@ -27,20 +19,6 @@ struct node
     node *right;
     node *next;
 };
-
-btree* create_empty_btree(){
-    return NULL;
-}
-
-/*btree* create_btree(byte item, long int freq, btree *left, btree *right)
-{
-    btree *new_binary_tree = (btree*) malloc(sizeof(btree));
-    new_binary_tree->c = item;
-    new_binary_tree->freq = freq;
-    new_binary_tree->left = left;
-    new_binary_tree->right = right;
-    return new_binary_tree;
-}*/
 
 queue* create_queue()
 {
@@ -93,7 +71,17 @@ void enqueue(queue *pq, byte item, long int freq, node *left, node *right)
     }
 }
 
-void btree_huff(btree *bt, queue *fila)
+void print_in_order(node *bt)
+{
+    if (bt != NULL) {
+        print_in_order(bt->left);
+        printf("%c", bt->item);
+        print_in_order(bt->right);
+        
+    }
+}
+
+void btree_huff(queue *fila)
 {
     node *aux = fila->head;
     node *aux2 = aux->next;
@@ -108,10 +96,12 @@ void btree_huff(btree *bt, queue *fila)
     
     node *huffman = fila->head;
     
-    print(huffman);
+    printf("Tree	-	");
+    print_in_order(huffman);
+    printf("\n");
 }
 
-void huff(btree *bt, long int *freq)
+void huff(long int *freq)
 {
     int i,flag = 0;
     queue *fila = create_queue();
@@ -123,14 +113,10 @@ void huff(btree *bt, long int *freq)
         
     }
     
-    btree_huff(bt,fila);
-    
-    
-    //print(fila);
+    btree_huff(fila);
 }
 
 int main() {
-    btree *arv = create_empty_btree();
     char string[256];
     long int freq[256] = {0};
     scanf("%s",string);
@@ -142,14 +128,11 @@ int main() {
         for(j=0;j<256;j++)
         {
       
-            if(string[i] == j)
-            {
-                freq[j]++;
-            }
+            if(string[i] == j) freq[j]++;
         }
     }
     
-    huff(arv,freq);
+    huff(freq);
     
 	return 0;
 }

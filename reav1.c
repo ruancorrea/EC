@@ -9,7 +9,7 @@ typedef struct node node;
 
 struct btree
 {
-    byte c;
+    node *c;
     btree *left;
     btree *right;
 };
@@ -23,6 +23,8 @@ struct node
 {
     byte item;
     long int priority;
+    node *left;
+    node *right;
     node *next;
 };
 
@@ -30,6 +32,15 @@ btree* create_empty_btree(){
     return NULL;
 }
 
+/*btree* create_btree(byte item, long int freq, btree *left, btree *right)
+{
+    btree *new_binary_tree = (btree*) malloc(sizeof(btree));
+    new_binary_tree->c = item;
+    new_binary_tree->freq = freq;
+    new_binary_tree->left = left;
+    new_binary_tree->right = right;
+    return new_binary_tree;
+}*/
 
 queue* create_queue()
 {
@@ -38,24 +49,38 @@ queue* create_queue()
     return new_queue;
 }
 
-void print(queue *fila)
+void print(node *aux)
 {
-    node *aux = fila->head;
-    while(aux != NULL)
+    if(aux != NULL)
     {
         printf("%d %c\n",aux->priority, aux->item);
-        aux = aux->next;
+        print(aux->left);
+        print(aux->right);
     }
 }
 
-void enqueue(queue *pq, byte item, long int freq)
+node* dequeue(queue *pq)
+{
+    if (pq == NULL) {
+        printf("Priority Queue underflow");
+        return NULL;
+    } else {
+        node *node = pq->head;
+        pq->head = pq->head->next;
+        node->next = NULL;
+        return node;
+    }
+}
+
+void enqueue(queue *pq, byte item, long int freq, node *left, node *right)
 {
     node *new_node = (node*) malloc(sizeof(node));
     new_node->item = item;//o//v
     new_node->priority = freq;//2//1
+    new_node->left = left;
+    new_node->right = right;
     
     if (pq->head == NULL || freq < pq->head->priority) {
-        //printf("oi\n");
         new_node->next = pq->head;
         pq->head = new_node;
     } else {
@@ -68,6 +93,24 @@ void enqueue(queue *pq, byte item, long int freq)
     }
 }
 
+void btree_huff(btree *bt, queue *fila)
+{
+    node *aux = fila->head;
+    node *aux2 = aux->next;
+    
+    while(aux2 != NULL){
+        enqueue(fila,'*', aux->priority + aux2->priority, aux, aux2);
+        dequeue(fila);
+        dequeue(fila);
+        aux = fila->head;
+        aux2= aux->next;
+    }
+    
+    node *huffman = fila->head;
+    
+    print(huffman);
+}
+
 void huff(btree *bt, long int *freq)
 {
     int i,flag = 0;
@@ -76,13 +119,14 @@ void huff(btree *bt, long int *freq)
     
     for(i=0;i<256;i++)
     {
-        if(freq[i] != 0)
-        {
-            enqueue(fila,i,freq[i]);
-        }
+        if(freq[i] != 0) enqueue(fila,i,freq[i], NULL, NULL);
         
     }
-    print(fila);
+    
+    btree_huff(bt,fila);
+    
+    
+    //print(fila);
 }
 
 int main() {
@@ -104,13 +148,6 @@ int main() {
             }
         }
     }
-    
-   /* for(i=0;i<256;i++)
-    {
-        if(freq[i] != 0){
-            printf("%c %d\n",i, freq[i]);
-        }
-    }*/
     
     huff(arv,freq);
     

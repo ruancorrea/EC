@@ -122,15 +122,15 @@ void print_in_order(node *bt)
 
 byte* add_left(byte *binary, long long int *i)
 {
-    binary[i[0]] = '0';
-    i[0]++;
+    binary[*i] = '0';
+    *i += 1;
     return binary;
 }
 
 byte* add_right(byte *binary, long long int *i)
 {
-    binary[i[0]] = '1';
-    i[0]++;
+    binary[*i] = '1';
+    *i += 1;
     return binary;
 }
 
@@ -142,8 +142,8 @@ void dicionario(hash *ht, node *huff, byte *binary, long int *i)
         {
             put_string_in_hash(ht, huff->item, binary);
             //printf("%c	-	%s\n",huff->item,binary);
-            binary[i[0]] = NULL;
-            i[0]--;
+            binary[*i] = NULL;
+            *i -= 1;
             return;
         }
         binary = add_left(binary,i);
@@ -152,8 +152,8 @@ void dicionario(hash *ht, node *huff, byte *binary, long int *i)
         binary = add_right(binary,i);
         dicionario(ht,huff->right, binary, i);
         
-        binary[i[0]] = NULL;
-        i[0]--;
+        binary[*i] = NULL;
+        *i -= 1;
     }
 }
 

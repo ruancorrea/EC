@@ -5,6 +5,8 @@
 typedef struct queue queue;
 typedef unsigned char byte;
 typedef struct node node;
+typedef struct element element;
+typedef struct hash_table hash;
 
 struct queue
 {
@@ -19,6 +21,43 @@ struct node
     node *right;
     node *next;
 };
+
+struct element
+{
+    byte binary[100];
+};
+
+struct hash_table
+{
+    element *table[256];
+};
+
+hash* create_dictionary()
+{
+    hash *new_hash = (hash*) malloc(sizeof(hash));
+    int i;
+    for (i = 0; i < 256; i++) new_hash->table[i] = NULL;
+    return new_hash;
+}
+
+void put_string_in_hash(hash *ht, byte index, byte *binary)
+{
+    element *new_element = (element*) malloc(sizeof(element));
+    strcpy(new_element->binary, binary);
+    ht->table[index] = new_element;
+}
+
+void print_dictionary(hash *ht)
+{
+    int i;
+    for(i=0;i <= 255;i++)
+    {
+        if(ht->table[i] != NULL)
+        {
+            printf("%c	-	%s\n",i,ht->table[i]->binary);
+        }
+    }
+}
 
 queue* create_queue()
 {
@@ -81,6 +120,44 @@ void print_in_order(node *bt)
     }
 }
 
+byte* add_left(byte *binary, long long int *i)
+{
+    binary[i[0]] = '0';
+    i[0]++;
+    return binary;
+}
+
+byte* add_right(byte *binary, long long int *i)
+{
+    binary[i[0]] = '1';
+    i[0]++;
+    return binary;
+}
+
+void dicionario(hash *ht, node *huff, byte *binary, long int *i)
+{
+    if(huff != NULL)
+    {
+        if(huff->left == NULL && huff->right == NULL)
+        {
+            put_string_in_hash(ht, huff->item, binary);
+            //printf("%c	-	%s\n",huff->item,binary);
+            binary[i[0]] = NULL;
+            i[0]--;
+            return;
+        }
+        binary = add_left(binary,i);
+        dicionario(ht,huff->left, binary, i);
+        
+        binary = add_right(binary,i);
+        dicionario(ht,huff->right, binary, i);
+        
+        binary[i[0]] = NULL;
+        i[0]--;
+    }
+}
+
+
 void btree_huff(queue *fila)
 {
     node *aux = fila->head;
@@ -95,10 +172,19 @@ void btree_huff(queue *fila)
     }
     
     node *huffman = fila->head;
-    
+    aux = huffman;
     printf("Tree	-	");
-    print_in_order(huffman);
+    print_in_order(aux);
     printf("\n");
+    
+    byte binary[30] = {0};
+    long int cont=0;
+    
+    hash *dictionary = create_dictionary();
+    
+    dicionario(dictionary, huffman, binary, &cont);
+    
+    print_dictionary(dictionary);
 }
 
 void huff(long int *freq)

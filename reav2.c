@@ -2,12 +2,9 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-typedef unsigned char byte;
 typedef struct btree btree;
 typedef struct node node;
 typedef struct hash_table hash;
-
-//int hash_index = 0;
  
 struct btree
 {
@@ -30,7 +27,7 @@ hash* create_dictionary()
 {
     hash *new_hash = (hash*) malloc(sizeof(hash));
     int i;
-    for (i = 0; i < 256; i++) new_hash->table[i] = NULL;//MUDAR OS NOMES MEMBRO E SEQUENCIA
+    for (i = 0; i < 256; i++) new_hash->table[i] = NULL;
     return new_hash;
 }
 
@@ -154,11 +151,7 @@ int main () {
     char string[400];
     int j=0,k;
     
-    for(k=strlen(entrada) - 1; k>=0; k--)
-    {
-        string[j] = entrada[k];
-        j++;
-    }
+    for(k=strlen(entrada) - 1; k>=0; k--, j++) string[j] = entrada[k];
     
     long int i=0;
     arv = montagem (string, arv, 200, ht, 0,&i);

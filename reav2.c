@@ -13,7 +13,7 @@ struct btree
 {
     char c;
     struct btree *left;
-    struct bbtree *right;
+    struct btree *right;
 };
  
 struct node
@@ -25,6 +25,69 @@ struct hash_table
 {
     node *membro[256];
 };
+
+hash* create_dictionary()
+{
+    hash *new_hash = (hash*) malloc(sizeof(hash));
+    int i;
+    for (i = 0; i < 256; i++) new_hash->membro[i] = NULL;//MUDAR OS NOMES MEMBRO E SEQUENCIA
+    return new_hash;
+}
+
+void put_string_in_hash(hash *ht, char index, char *binary)
+{
+    node *new_element = (node*) malloc(sizeof(node));
+    strcpy(new_element->sequencia, binary);
+    ht->membro[index] = new_element;
+}
+
+void print_dictionary(hash *ht)
+{
+    int i;
+    for(i=0;i <= 255;i++)
+    {
+        if(ht->membro[i] != NULL)
+        {
+            printf("%c : %s\n",i,ht->membro[i]->sequencia);
+        }
+    }
+}
+
+byte* add_left(byte *binary, long long int *i)
+{
+    binary[*i] = '0';
+    *i += 1;
+    return binary;
+}
+
+byte* add_right(byte *binary, long long int *i)
+{
+    binary[*i] = '1';
+    *i += 1;
+    return binary;
+}
+
+void dicionario(hash *ht, btree *huff, char *binary, long int *i)
+{
+    if(huff != NULL)
+    {
+        if(huff->left == NULL && huff->right == NULL)
+        {
+            put_string_in_hash(ht, huff->c, binary);
+            binary[*i] = NULL;
+            *i -= 1;
+            return;
+        }
+        binary = add_left(binary,i);
+        dicionario(ht,huff->left, binary, i);
+        
+        binary = add_right(binary,i);
+        dicionario(ht,huff->right, binary, i);
+        
+        binary[*i] = NULL;
+        *i -= 1;
+    }
+}
  
 btree *create_t_node(char c, btree* left, btree* right, int *indice)
 {
@@ -70,16 +133,6 @@ void p_con(btree *bt)
     }
 }
  
-hash *create_hash()
-{
-    hash *new_hash = (hash*) malloc(sizeof(hash));
-    int i;
-    for(i = 0; i < 257; i++)
-    {
-        new_hash->membro[i] = NULL;
-    }
-    return new_hash;
-}
  
 void set_hash(hash *ht){
     int i, j;
@@ -124,17 +177,22 @@ void inverter(char *buffer)
 }
  
 int main () {
-    hash *ht = create_hash ();
+    hash *ht = create_dictionary ();
     btree *arv = NULL;
  
     char str [300];
     char formato[25];
     scanf ("%s",str);
     inverter (str);
-    int indice = 0;
+    long int indice = 0;
     arv = montar_arvore (str, arv, 200, ht, 0,&indice);
-    p_con (arv);
+    btree *aux = arv;
+    p_con (aux);
     printf("Decoding Tree is:\n");
+    char binario[40] = {0};
+    indice = 0;
+    dicionario(ht, arv, binario, &indice);
+    print_dictionary(ht);
     return 0;
     
 }

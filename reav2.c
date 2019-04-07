@@ -7,7 +7,7 @@ typedef struct btree btree;
 typedef struct node node;
 typedef struct hash_table hash;
 
-int hash_index = 0;
+//int hash_index = 0;
  
 struct btree
 {
@@ -18,27 +18,27 @@ struct btree
  
 struct node
 {
-    char sequencia[300];
+    char seq[300];
 };
  
 struct hash_table
 {
-    node *membro[256];
+    node *table[256];
 };
 
 hash* create_dictionary()
 {
     hash *new_hash = (hash*) malloc(sizeof(hash));
     int i;
-    for (i = 0; i < 256; i++) new_hash->membro[i] = NULL;//MUDAR OS NOMES MEMBRO E SEQUENCIA
+    for (i = 0; i < 256; i++) new_hash->table[i] = NULL;//MUDAR OS NOMES MEMBRO E SEQUENCIA
     return new_hash;
 }
 
 void put_string_in_hash(hash *ht, char index, char *binary)
 {
     node *new_element = (node*) malloc(sizeof(node));
-    strcpy(new_element->sequencia, binary);
-    ht->membro[index] = new_element;
+    strcpy(new_element->seq, binary);
+    ht->table[index] = new_element;
 }
 
 void print_dictionary(hash *ht)
@@ -46,21 +46,18 @@ void print_dictionary(hash *ht)
     int i;
     for(i=0;i <= 255;i++)
     {
-        if(ht->membro[i] != NULL)
-        {
-            printf("%c : %s\n",i,ht->membro[i]->sequencia);
-        }
+        if(ht->table[i] != NULL) printf("%c : %s\n",i,ht->table[i]->seq);
     }
 }
 
-byte* add_left(byte *binary, long long int *i)
+char* add_left(char *binary, long long int *i)
 {
     binary[*i] = '0';
     *i += 1;
     return binary;
 }
 
-byte* add_right(byte *binary, long long int *i)
+char* add_right(char *binary, long long int *i)
 {
     binary[*i] = '1';
     *i += 1;
@@ -89,7 +86,7 @@ void dicionario(hash *ht, btree *huff, char *binary, long int *i)
     }
 }
  
-btree *create_t_node(char c, btree* left, btree* right, int *indice)
+btree *create_btree(char c, btree* left, btree* right, int *indice)
 {
     btree *novo = (btree *) malloc(sizeof(btree));
     novo->c = c;
@@ -134,31 +131,18 @@ void p_con(btree *bt)
 }
  
  
-void set_hash(hash *ht){
-    int i, j;
-    for(i = 0; i < 257; i++)
-    {
-        for(j = 0; j < 301; j++)
-        {
-            ht->membro[i]->sequencia[j] = -1;
-        }
-    }
-}
- 
- 
- 
-btree *montar_arvore(char *str, btree *bt, int tree_size, hash *ht, int map, int *indice) //descomprimir
+btree *montagem(char *string, btree *bt, int tree_size, hash *ht, int map, int *indice) //descomprimir
 {
-    if(str[*indice] != '*')
+    if(string[*indice] != '*')
     {  
-        return create_t_node(str[*indice], NULL, NULL,indice);
+        return create_btree(string[*indice], NULL, NULL,indice);
     }
     else if(bt == NULL)
     {
-        bt = create_t_node(str[*indice], NULL, NULL,indice);
+        bt = create_btree(string[*indice], NULL, NULL,indice);
        
-        bt->right = montar_arvore(str, bt->right, tree_size, ht, 1,indice);
-        bt->left = montar_arvore(str, bt->left, tree_size, ht, 0, indice);
+        bt->right = montagem(string, bt->right, tree_size, ht, 1,indice);
+        bt->left = montagem(string, bt->left, tree_size, ht, 0, indice);
     }
     return bt;
 }
@@ -185,7 +169,7 @@ int main () {
     scanf ("%s",str);
     inverter (str);
     long int indice = 0;
-    arv = montar_arvore (str, arv, 200, ht, 0,&indice);
+    arv = montagem (str, arv, 200, ht, 0,&indice);
     btree *aux = arv;
     p_con (aux);
     printf("Decoding Tree is:\n");

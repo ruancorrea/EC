@@ -181,9 +181,7 @@ void btree_huff(queue *fila)
     long int cont=0;
     
     hash *dictionary = create_dictionary();
-    
     dicionario(dictionary, huffman, binary, &cont);
-    
     print_dictionary(dictionary);
 }
 
@@ -213,7 +211,6 @@ int main() {
     {  
         for(j=0;j<256;j++)
         {
-      
             if(string[i] == j) freq[j]++;
         }
     }

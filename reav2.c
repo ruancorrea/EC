@@ -2,143 +2,138 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
- 
- 
+
 int indice = 0;
 int hash_index = 0;
  
 typedef struct h_tree
 {
     char c;
-    struct h_tree * left;
-    struct h_tree * right;
-} h_tree;
+    struct h_tree *left;
+    struct h_tree *right;
+}h_tree;
  
 typedef struct node
 {
-    sequência de caracteres [300];
-}nó;
+    char sequencia[300];
+}node;
  
 typedef struct hash_tree
 {
-    nó * membro [256];
-} hash_tree;
+    node *membro[256];
+}hash_tree;
  
-h_tree * create_t_node (char c, h_ árvore * esquerda, h_ árvore * direita)
+h_tree *create_t_node(char c, h_tree* left, h_tree* right)
 {
-    h_tree * novo = (h_tree *) malloc (sizeof (h_tree));
-    novo-> c = c;
-    novo-> esquerda = esquerda;
-    novo-> direita = direita;
-    índice + = 1;
-    retornar novo;
+    h_tree *novo = (h_tree *) malloc(sizeof(h_tree));
+    novo->c = c;
+    novo->left = left;
+    novo->right = right;
+    indice += 1;
+    return novo;
 }
  
-void contruct_print (árvore h_tree *)
+void contruct_print(h_tree *tree)
 {
-    if ((tree)! = NULL)
+    if((tree) != NULL)
     {  
-        contruct_print (árvore-> esquerda);
-        contruct_print (árvore-> direita);
-        printf ("% c", árvore-> c);
+        contruct_print(tree->left);
+        contruct_print(tree->right);
+        printf("%c", tree->c);
     }
 }
  
-void p_con (árvore h_tree *)
+void p_con(h_tree *tree)
 {
-    if (tree == NULL)
+    if(tree == NULL)
     {
-        Retorna;
+        return;
     }
-    outro
+    else
     {
-        printf ("------------------------------");
-        printf ("\ nA árvore");
-        contruct_print (árvore);
-        printf ("tem:");   
-        printf ("\ n- subárvore esquerda:");
-        contruct_print (árvore-> esquerda);
-        printf ("\ n- subárvore direita:");
-        contruct_print (árvore-> direita);
-        puts ("\ n ------------------------------");
+        printf("------------------------------");
+        printf("\nThe tree ");
+        contruct_print(tree);
+        printf(" has:");   
+        printf("\n- Left subtree: ");
+        contruct_print(tree->left);
+        printf("\n- Right subtree: ");
+        contruct_print(tree->right);
+        puts("\n------------------------------");
        
        
-        p_con (árvore-> esquerda);
-        p_con (árvore-> direita);
+        p_con(tree->left);
+        p_con(tree->right);
     }
 }
  
-hash_tree * create_hash ()
+hash_tree *create_hash()
 {
-    hash_tree * new_hash = (hash_tree *) malloc (sizeof (hash_tree));
+    hash_tree *new_hash = (hash_tree*) malloc(sizeof(hash_tree));
     int i;
-    para (i = 0; i <257; i ++)
+    for(i = 0; i < 257; i++)
     {
-        new_hash-> membro [i] = NULL;
+        new_hash->membro[i] = NULL;
     }
     return new_hash;
 }
  
-void set_hash (hash_tree * ht) {
+void set_hash(hash_tree *ht){
     int i, j;
-    para (i = 0; i <257; i ++)
+    for(i = 0; i < 257; i++)
     {
-        para (j = 0; j <301; j ++)
+        for(j = 0; j < 301; j++)
         {
-            ht-> membro [i] -> sequencia [j] = -1;
+            ht->membro[i]->sequencia[j] = -1;
         }
     }
 }
  
  
  
-h_tree * montar_arvore (char * str, árvore h_tree *, int tree_size, hash_tree * ht, mapa int) // descomprimir
+h_tree *montar_arvore(char *str, h_tree *tree, int tree_size, hash_tree *ht, int map) //descomprimir
 {
-    if (str [indice]! = '*')
+    if(str[indice] != '*')
     {  
-        // ht-> membro [str [indice]] -> sequencia [hash_index] = mapa;
-        // hash_index = 0;
-        return create_t_node (str [indice], NULL, NULL);
+        //ht->membro[str[indice]]->sequencia[hash_index] = map;
+        //hash_index = 0;
+        return create_t_node(str[indice], NULL, NULL);
     }
-    else if (tree == NULL)
+    else if(tree == NULL)
     {
-        tree = create_t_node (str [indice], nulo, nulo);
+        tree = create_t_node(str[indice], NULL, NULL);
        
-        árvore-> direita = montar_arvore (str, tree-> right, tree_size, ht, 1);
-        árvore-> esquerda = montar_arvore (str, tree-> left, tree_size, ht, 0);
+        tree->right = montar_arvore(str, tree->right, tree_size, ht, 1);
+        tree->left = montar_arvore(str, tree->left, tree_size, ht, 0);
     }
-    árvore de retorno;
+    return tree;
 }
  
  
-inversor void (buffer de char *)
+void inverter(char *buffer)
 {
     int i;
-    int size = strlen (buffer);
-    para (i = 0; i <tamanho / 2; i ++)
+    int size = strlen(buffer);
+    for(i = 0; i < size / 2; i++)
     {
-       char tmp = buffer [i]; // armazena o caractere inicial
-       buffer [i] = buffer [tamanho - i - 1]; // Troca o personagem da ponta oposta
-       buffer [tamanho - i - 1] = tmp; // Armazena o caractere inicial sem buffer
+       char tmp = buffer[i]; //armazena o character inicial
+       buffer[i] = buffer[size - i - 1]; //Troca o character da ponta oposta
+       buffer[size - i - 1] = tmp; //Armazena o character inicial no buffer
     }
 }
  
-void decompress () {
+int main () {
     hash_tree * ht = create_hash ();
-    // set_hash (ht);
+    h_tree *arv = NULL;
  
     char str [300];
-    formato de char [25];
-    fica (str);
-    inversor (str);
-    h_tree * tree = NULL;
+    char formato[25];
+    scanf ("%s",str);
+    inverter (str);
     indice = 0;
-    tree = montar_arvore (str, árvore, 200, ht, 0);
-    p_con (árvore);
-    printf ("Árvore de decodificação é: \ n");
-   
-}
- 
-void main () {
-    descomprimir();
+    arv = montar_arvore (str, arv, 200, ht, 0);
+    p_con (arv);
+    printf("Decoding Tree is:\n");
+    return 0;
+    
 }

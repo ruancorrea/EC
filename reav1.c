@@ -2,6 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+
 typedef struct queue queue;
 typedef unsigned char byte;
 typedef struct node node;

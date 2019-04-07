@@ -2,6 +2,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+
 typedef struct btree btree;
 typedef struct node node;
 typedef struct hash_table hash;

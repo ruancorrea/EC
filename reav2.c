@@ -106,7 +106,7 @@ void contruct_print(btree *bt)
     }
 }
  
-void p_con(btree *bt)
+void con(btree *bt)
 {
     if(bt == NULL)
     {
@@ -124,12 +124,10 @@ void p_con(btree *bt)
         contruct_print(bt->right);
         puts("\n------------------------------");
        
-       
-        p_con(bt->left);
-        p_con(bt->right);
+        con(bt->left);
+        con(bt->right);
     }
 }
- 
  
 btree *montagem(char *string, btree *bt, int tree_size, hash *ht, int map, int *indice) //descomprimir
 {
@@ -147,36 +145,29 @@ btree *montagem(char *string, btree *bt, int tree_size, hash *ht, int map, int *
     return bt;
 }
  
- 
-void inverter(char *buffer)
-{
-    int i;
-    int size = strlen(buffer);
-    for(i = 0; i < size / 2; i++)
-    {
-       char tmp = buffer[i]; //armazena o character inicial
-       buffer[i] = buffer[size - i - 1]; //Troca o character da ponta oposta
-       buffer[size - i - 1] = tmp; //Armazena o character inicial no buffer
-    }
-}
- 
 int main () {
     hash *ht = create_dictionary ();
     btree *arv = NULL;
  
-    char str [300];
-    char formato[25];
-    scanf ("%s",str);
-    inverter (str);
-    long int indice = 0;
-    arv = montagem (str, arv, 200, ht, 0,&indice);
+    char entrada[400];
+    scanf ("%s",entrada);
+    char string[400];
+    int j=0,k;
+    
+    for(k=strlen(entrada) - 1; k>=0; k--)
+    {
+        string[j] = entrada[k];
+        j++;
+    }
+    
+    long int i=0;
+    arv = montagem (string, arv, 200, ht, 0,&i);
     btree *aux = arv;
-    p_con (aux);
+    con (aux);
     printf("Decoding Tree is:\n");
     char binario[40] = {0};
-    indice = 0;
-    dicionario(ht, arv, binario, &indice);
+    i=0;
+    dicionario(ht, arv, binario, &i);
     print_dictionary(ht);
     return 0;
-    
 }

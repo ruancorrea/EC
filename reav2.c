@@ -9,7 +9,7 @@ typedef struct hash_table hash;
  
 struct btree
 {
-    char c;
+    char item;
     struct btree *left;
     struct btree *right;
 };
@@ -42,10 +42,7 @@ void put_string_in_hash(hash *ht, char index, char *binary)
 void print_dictionary(hash *ht)
 {
     int i;
-    for(i=0;i <= 255;i++)
-    {
-        if(ht->table[i] != NULL) printf("%c : %s\n",i,ht->table[i]->seq);
-    }
+    for(i=0;i <= 255;i++) if(ht->table[i] != NULL) printf("%c : %s\n",i,ht->table[i]->seq);
 }
 
 char* add_left(char *binary, long long int *i)
@@ -68,7 +65,7 @@ void dicionario(hash *ht, btree *huff, char *binary, long int *i)
     {
         if(huff->left == NULL && huff->right == NULL)
         {
-            put_string_in_hash(ht, huff->c, binary);
+            put_string_in_hash(ht, huff->item, binary);
             binary[*i] = NULL;
             *i -= 1;
             return;
@@ -84,27 +81,27 @@ void dicionario(hash *ht, btree *huff, char *binary, long int *i)
     }
 }
  
-btree *create_btree(char c, btree* left, btree* right, int *indice)
+btree *create_btree(char item, btree* left, btree* right, int *indice)
 {
-    btree *novo = (btree *) malloc(sizeof(btree));
-    novo->c = c;
-    novo->left = left;
-    novo->right = right;
+    btree *new_btree = (btree *) malloc(sizeof(btree));
+    new_btree->item = item;
+    new_btree->left = left;
+    new_btree->right = right;
     *indice += 1;
-    return novo;
+    return new_btree;
 }
  
-void contruct_print(btree *bt)
+void print_pos_order(btree *bt)
 {
     if(bt != NULL)
     {  
-        contruct_print(bt->left);
-        contruct_print(bt->right);
-        printf("%c", bt->c);
+        print_pos_order(bt->left);
+        print_pos_order(bt->right);
+        printf("%c", bt->item);
     }
 }
  
-void con(btree *bt)
+void print(btree *bt)
 {
     if(bt == NULL)
     {
@@ -112,22 +109,20 @@ void con(btree *bt)
     }
     else
     {
-        printf("------------------------------");
-        printf("\nThe tree ");
-        contruct_print(bt);
-        printf(" has:");   
-        printf("\n- Left subtree: ");
-        contruct_print(bt->left);
+        printf("------------------------------\nThe tree ");
+        print_pos_order(bt);
+        printf(" has:\n- Left subtree: ");   
+        print_pos_order(bt->left);
         printf("\n- Right subtree: ");
-        contruct_print(bt->right);
+        print_pos_order(bt->right);
         puts("\n------------------------------");
        
-        con(bt->left);
-        con(bt->right);
+        print(bt->left);
+        print(bt->right);
     }
 }
  
-btree *montagem(char *string, btree *bt, int tree_size, hash *ht, int map, int *indice) //descomprimir
+btree *montagem(char *string, btree *bt, int *indice) //descomprimir
 {
     if(string[*indice] != '*')
     {  
@@ -137,8 +132,8 @@ btree *montagem(char *string, btree *bt, int tree_size, hash *ht, int map, int *
     {
         bt = create_btree(string[*indice], NULL, NULL,indice);
        
-        bt->right = montagem(string, bt->right, tree_size, ht, 1,indice);
-        bt->left = montagem(string, bt->left, tree_size, ht, 0, indice);
+        bt->right = montagem(string, bt->right,indice);
+        bt->left = montagem(string, bt->left, indice);
     }
     return bt;
 }
@@ -155,9 +150,9 @@ int main () {
     for(k=strlen(entrada) - 1; k>=0; k--, j++) string[j] = entrada[k];
     
     long int i=0;
-    arv = montagem (string, arv, 200, ht, 0,&i);
+    arv = montagem (string, arv,&i);
     btree *aux = arv;
-    con (aux);
+    print(aux);
     printf("Decoding Tree is:\n");
     char binario[40] = {0};
     i=0;

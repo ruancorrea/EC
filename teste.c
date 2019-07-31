@@ -16,14 +16,6 @@
 
 #define EXCECAO  1001
 
-
-struct informacoes
-{
-    float velocidade; // m/s
-    float aceleracao; // m/s
-    float angulo;
-};
-
 float transformando(float ang)
 {
     return (ang * M_PI)/180;
@@ -57,27 +49,6 @@ float verificando()
         scanf("%f",&x);
         if(x>=0) break;
     }
-    /*bool valido = true;
-    float v;
-    while(valido)
-    {
-        try {
-          scanf("%f", &v);
-          valido = false;
-          if(v < 0)
-          {
-            printf("Insira um numero maior que zero!");
-            valido = true;
-          }
-          printf("Disparando exceção\n");
-          throw(EXCECAO);
-          printf("Essa linha nao será executada");
-       }
-       catch(EXCECAO) {
-          printf("Exceção tratada\n");
-       }
-    }*/
-
     return x;
 }
 
@@ -91,7 +62,7 @@ void Lancamento()
         float vel = verificando();
         printf("Insira a aceleracao do lancamento! (em m/s²)\n");
         float ace = verificando();
-        printf("Insira o angulo (em graus)!\n");
+        printf("Insira o angulo (em graus °)!\n");
         float ang = verificando();
         float rad = transformando(ang);
         printf("Velocidade: %.2f m/s\nAceleracao: %.2f m/s\nAngulo: %.2f°\nrad: %.2f\n\n", vel, ace, ang, rad);
@@ -99,13 +70,15 @@ void Lancamento()
         float y = alturaMAX(rad, vel, ace);
         printf("X = %.15f\nY = %.15f\nTempo de voo: %.15f\n\n",x,y,tempo(rad,vel,ace));
 
+        printf("|-------------------------------------|\n");
         printf("| Deseja testar novamente o programa? |\n");
         printf("| 0 - Nao                             |\n");
-        printf("| 1 - Sim                             |\n\n");
+        printf("| 1 - Sim                             |\n");
+        printf("|-------------------------------------|\n\n");
         scanf("%d",&x);
         if(x==0) break;
-
     }
+    printf("Ate mais\n");
 
 }
 

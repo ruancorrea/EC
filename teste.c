@@ -52,6 +52,19 @@ float verificando()
     return x;
 }
 
+void grafico(float x, float y, float tempo)
+{
+    float partes = tempo / 5;
+    float somadaspartes = 0;
+
+    for(int i=0;i<5;i++)
+    {
+        printf("tempo %d\n",i);
+        printf("%.3f\n\n",somadaspartes);
+        somadaspartes += partes;
+    }
+}
+
 void Lancamento()
 {
     int x;
@@ -68,7 +81,10 @@ void Lancamento()
         printf("Velocidade: %.2f m/s\nAceleracao: %.2f m/s\nAngulo: %.2f°\nrad: %.2f\n\n", vel, ace, ang, rad);
         float x = alcance(rad, vel, ace);
         float y = alturaMAX(rad, vel, ace);
-        printf("X = %.15f\nY = %.15f\nTempo de voo: %.15f\n\n",x,y,tempo(rad,vel,ace));
+        float t = tempo(rad,vel,ace);
+        printf("X = %.15f\nY = %.15f\nTempo de voo: %.15f\n\n",x,y,t);
+
+        grafico(x,y,t);
 
         printf("|-------------------------------------|\n");
         printf("| Deseja testar novamente o programa? |\n");

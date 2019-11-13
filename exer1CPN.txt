@@ -1,0 +1,7 @@
+fun inverter (e, l) = 
+	if l = []
+	then l
+	else
+		inverter(List.tl l ^^ List.hd l) 
+
+	inverter ()

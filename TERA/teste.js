@@ -8,7 +8,7 @@ class Livro{
 
 var livros = [];
 livros[0] = new Livro('Joaozinho e Tomé', 'Pedrinho', 'Fedoso');
-livros[1] = new Livro('Tomé', 'Ivan', 'Fedoso');
+livros[1] = new Livro('Tomé Fi da Peste', 'Ivan', 'Fedoso');
 livros[2] = new Livro('Joaozinho', 'Felismino', 'Corrupto');
 livros[3] = new Livro('Tom é bom', 'Felismino', 'Corrupto');
 livros[4] = new Livro('Pi', 'Hiaguh', 'Claudioso');
@@ -58,9 +58,9 @@ var pagina = 0;
 var table = [];
 
 for(var k = 0; k < livros.length;k++){
-    table[k] = "<table id = 'tabelinha'><thead><tr><td>Livro</td>" + "<td>" + livros[k].nome;
-    table[k] +="<tr><td>Autor</td>" + "<td>" + livros[k].autor;
-    table[k] +="<tr><td>Gênero</td>" + "<td>" + livros[k].genero + "</thead><tbody>";
+    table[k] = "<table id = 'tabelinha'><thead><tr><td class='ce'>Livro</td>" + "<td>" + livros[k].nome;
+    table[k] +="<tr><td class='ce'>Autor</td>" + "<td class='cd'>" + livros[k].autor;
+    table[k] +="<tr><td class='ce'>Gênero</td>" + "<td class='cd'>" + livros[k].genero + "</thead><tbody>";
     table[k] += "</tbody</table>";
 }
 
